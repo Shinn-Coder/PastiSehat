@@ -343,7 +343,7 @@ export default function DashboardPage({ user, onUpdateUser, onNavigate, onLogout
           {/* Quick Actions / Settings */}
           <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 shadow-sm space-y-4">
             <h2 className="text-xl font-bold mb-6">Keamanan</h2>
-            <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50:bg-slate-700 transition-colors group">
+            <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-colors group">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-500 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                   <Shield className="w-5 h-5" />
@@ -352,7 +352,7 @@ export default function DashboardPage({ user, onUpdateUser, onNavigate, onLogout
               </div>
               <ChevronRight className="w-4 h-4 text-gray-300" />
             </button>
-            <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50:bg-slate-700 transition-colors group">
+            <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-colors group">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-500 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                   <Lock className="w-5 h-5" />

@@ -251,6 +251,11 @@ export default function AIChatPage({ user, onNavigate, onShowToast, addAppointme
     addAppointment({ id: doctor.id, name: doctor.name, specialty: doctor.specialty }, date, slot);
     if (onShowToast) onShowToast("Janji temu dikonfirmasi & disinkronkan!", "success");
     handleEndChat();
+    
+    // Auto-navigate to history after 2 seconds
+    setTimeout(() => {
+      onNavigate(Page.HISTORY);
+    }, 2000);
   };
 
   const simulateAction = (type: string) => {

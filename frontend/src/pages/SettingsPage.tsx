@@ -48,7 +48,7 @@ export default function SettingsPage({ access, onUpdateAccess, onBack, onShowToa
       <div className="flex items-center gap-6">
         <button 
           onClick={onBack}
-          className="p-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50:bg-slate-700 transition-colors shadow-sm"
+          className="p-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors shadow-sm"
           id="back-button"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -121,19 +121,19 @@ export default function SettingsPage({ access, onUpdateAccess, onBack, onShowToa
             </div>
 
             <div className="pt-4 space-y-4">
-              <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100:bg-slate-700 transition-all font-bold text-sm">
+              <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-all font-bold text-sm">
                 <div className="flex items-center gap-4">
                   <Camera className="w-5 h-5 text-gray-400" /> Izin Akses Kamera
                 </div>
                 <span className="text-primary">Aktif</span>
               </button>
-              <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100:bg-slate-700 transition-all font-bold text-sm">
+              <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-all font-bold text-sm">
                 <div className="flex items-center gap-4">
                   <Mic className="w-5 h-5 text-gray-400" /> Izin Akses Mikrofon
                 </div>
                 <span className="text-primary">Aktif</span>
               </button>
-              <button className="w-full flex items-center justify-between p-4 bg-gray-100 rounded-2xl hover:bg-gray-200:bg-slate-600 transition-all font-bold text-sm text-primary">
+              <button className="w-full flex items-center justify-between p-4 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-all font-bold text-sm text-primary">
                 <div className="flex items-center gap-4 text-gray-600">
                   <Key className="w-5 h-5 text-gray-400" /> Ubah Kata Sandi
                 </div>
@@ -163,7 +163,7 @@ export default function SettingsPage({ access, onUpdateAccess, onBack, onShowToa
                     className={`flex items-center gap-3 p-4 rounded-2xl border-2 transition-all font-bold text-sm ${
                       access.theme === t.id 
                         ? 'border-primary bg-secondary/30 text-primary' 
-                        : 'border-transparent bg-gray-50 hover:bg-gray-100:bg-slate-700 text-gray-600'
+                        : 'border-transparent bg-gray-50 hover:bg-gray-100 text-gray-600'
                     }`}
                   >
                     <t.icon className="w-5 h-5" /> {t.label}
