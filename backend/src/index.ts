@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 const prisma = new PrismaClient();
-const PORT = process.env.PORT || 8000;
+const PORT = Number(process.env.PORT) || 8080;
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
@@ -315,31 +315,35 @@ app.post('/api/auth/register', async (req: Request, res: Response) => {
   try {
     const { email, password, name, dob, weight, height, medicalHistory, address } = req.body;
 
+    // Cek apakah email sudah terdaftar
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ error: 'Email sudah terdaftar' });
+      return res.status(400).json({ error: 'Email sudah digunakan' });
     }
 
+    // Enkripsi password sebelum menyimpan ke database
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Simpan data menggunakan prisma.user.create
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        fullName: name,
-        dob: new Date(dob),
-        weight: parseFloat(weight) || null,
-        height: parseFloat(height) || null,
+        fullName: name || null,
+        dob: dob ? new Date(dob) : null,
+        weight: weight ? parseFloat(weight) : null,
+        height: height ? parseFloat(height) : null,
         medicalHistory: Array.isArray(medicalHistory) ? medicalHistory : [],
-        address: address || 'Tidak ada alamat',
+        address: address || null,
       },
     });
 
     const { password: _, ...userWithoutPassword } = user;
-    return res.json({ user: userWithoutPassword });
-  } catch (error) {
-    console.error('[/api/auth/register] Error:', error);
-    return res.status(500).json({ error: 'Gagal melakukan registrasi' });
+    // Kembalikan status 201 jika berhasil
+    return res.status(201).json({ user: userWithoutPassword });
+  } catch (error: any) {
+    console.error("PRISMA ERROR DETAILS:", error.message || error);
+    return res.status(500).json({ error: 'Gagal membuat akun, periksa koneksi database' });
   }
 });
 
@@ -373,11 +377,11 @@ async function startServer() {
   } catch (error) {
     console.error('❌ Gagal konek ke database:', error);
     console.error('   Pastikan PostgreSQL sudah berjalan dan DATABASE_URL di .env sudah benar.');
-    process.exit(1);
+    // process.exit(1); // Removed to allow deployment even if DB connection fails
   }
 
-  app.listen(PORT, () => {
-    console.log(`✅ Backend PastiSehat berjalan di http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Backend PastiSehat berjalan di port ${PORT} (Cloud Run Ready)`);
   });
 }
 

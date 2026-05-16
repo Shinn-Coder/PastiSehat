@@ -1,19 +1,23 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // Setelah koneksi Cloud SQL siap, pastikan untuk menjalankan:
+  // npx prisma generate
+  // npx prisma db push
 }
 
 model User {
   id             String        @id @default(uuid())
   email          String        @unique
   password       String
-  fullName       String
-  dob            DateTime
-  address        String
+  fullName       String?
+  dob            DateTime?
+  address        String?
   weight         Float?
   height         Float?
   medicalHistory String[]

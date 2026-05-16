@@ -5,13 +5,13 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  ArrowRight, 
-  ArrowLeft, 
-  Check, 
-  User, 
-  MapPin, 
-  Activity, 
+import {
+  ArrowRight,
+  ArrowLeft,
+  Check,
+  User,
+  MapPin,
+  Activity,
   Lock,
   Mail,
   Info,
@@ -51,7 +51,7 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
   const toggleCondition = (cond: string) => {
     setFormData(prev => ({
       ...prev,
-      conditions: prev.conditions.includes(cond) 
+      conditions: prev.conditions.includes(cond)
         ? prev.conditions.filter(c => c !== cond)
         : [...prev.conditions, cond]
     }));
@@ -67,11 +67,11 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
         name: formData.name,
         dob: formData.dob,
         address: formData.address,
-        medicalHistory: formData.conditions.includes('Lainnya') 
+        medicalHistory: formData.conditions.includes('Lainnya')
           ? [...formData.conditions.filter(c => c !== 'Lainnya'), formData.customCondition].filter(c => c.trim() !== '')
           : formData.conditions,
       };
-      
+
       const user = await register(userData);
       // Registration successful, now show onboarding
       setFormData(prev => ({ ...prev, id: user.id })); // Keep track of ID
@@ -87,7 +87,7 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    
+
     const loginEmail = (document.getElementById('login-email') as HTMLInputElement)?.value;
     const loginPass = (document.getElementById('login-password') as HTMLInputElement)?.value;
 
@@ -118,7 +118,7 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
       age: 28,
       gender: formData.gender as any,
       address: formData.address,
-      medicalHistory: formData.conditions.includes('Lainnya') 
+      medicalHistory: formData.conditions.includes('Lainnya')
         ? [...formData.conditions.filter(c => c !== 'Lainnya'), formData.customCondition].filter(c => c.trim() !== '')
         : formData.conditions,
       familyMembers: []
@@ -128,18 +128,18 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
 
   if (showOnboarding) {
     const onboarding = [
-      { 
-        title: "Di sini Cici berada", 
+      {
+        title: "Di sini Cici berada",
         desc: "Butuh bantuan diagnostik cepat? Cici selalu siap 24/7 di pojok kanan bawah atau menu chat.",
         icon: 'MessageSquare'
       },
-      { 
-        title: "Di sini jadwalmu", 
+      {
+        title: "Di sini jadwalmu",
         desc: "Semua antrean dan rencana kunjungan dokter tersimpan rapi di menu Riwayat.",
         icon: 'Calendar'
       },
-      { 
-        title: "Di sini fitur Apotek", 
+      {
+        title: "Di sini fitur Apotek",
         desc: "Pesan obat resep atau beli obat bebas tanpa perlu antre di rumah sakit.",
         icon: 'Pill'
       }
@@ -147,7 +147,7 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
 
     return (
       <div className="min-h-[80vh] flex items-center justify-center p-6 bg-secondary/20">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="max-w-md w-full bg-white p-10 rounded-[3rem] shadow-2xl space-y-8 text-center"
@@ -159,14 +159,14 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
             <h2 className="text-3xl font-bold">{onboarding[onboardingStep - 1].title}</h2>
             <p className="text-gray-500">{onboarding[onboardingStep - 1].desc}</p>
           </div>
-          
+
           <div className="flex justify-center gap-2">
             {[1, 2, 3].map(i => (
               <div key={i} className={`h-1.5 rounded-full transition-all ${onboardingStep === i ? 'w-8 bg-primary' : 'w-2 bg-gray-200'}`} />
             ))}
           </div>
 
-          <button 
+          <button
             onClick={() => {
               if (onboardingStep < 3) setOnboardingStep(prev => prev + 1);
               else finishOnboarding();
@@ -187,12 +187,12 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary rounded-full blur-[120px]" />
       </div>
 
-      <motion.div 
+      <motion.div
         layout
         className="max-w-xl w-full bg-white rounded-[3rem] shadow-2xl border border-gray-50 p-8 md:p-12"
       >
         <div className="absolute top-6 left-6 z-20">
-          <button 
+          <button
             onClick={onBack}
             className="flex items-center gap-2 p-3 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all font-bold text-primary group"
           >
@@ -207,7 +207,7 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
 
         <AnimatePresence mode="wait">
           {isLogin ? (
-            <motion.form 
+            <motion.form
               key="login"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -225,12 +225,12 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                   <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Email <span className="text-red-500">*</span></label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input 
+                    <input
                       id="login-email"
-                      type="email" 
+                      type="email"
                       required
-                      placeholder="Masukkan email Anda" 
-                      className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" 
+                      placeholder="Masukkan email Anda"
+                      className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                     />
                   </div>
                 </div>
@@ -238,12 +238,12 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                   <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Password <span className="text-red-500">*</span></label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input 
+                    <input
                       id="login-password"
-                      type="password" 
+                      type="password"
                       required
-                      placeholder="••••••••" 
-                      className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" 
+                      placeholder="••••••••"
+                      className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                     />
                   </div>
                 </div>
@@ -255,7 +255,7 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                 </label>
                 <button type="button" className="text-primary font-bold hover:underline">Lupa Password?</button>
               </div>
-              <button 
+              <button
                 type="submit"
                 disabled={loading}
                 className="w-full btn-primary py-4 text-lg disabled:opacity-50"
@@ -267,7 +267,7 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
               </p>
             </motion.form>
           ) : (
-            <motion.form 
+            <motion.form
               key="register"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -282,16 +282,15 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
               {/* Progress Bar */}
               <div className="relative flex justify-between items-center">
                 <div className="absolute top-1/2 -translate-y-1/2 left-0 w-full h-1 bg-gray-100 -z-10 rounded-full" />
-                <div 
-                  className="absolute top-1/2 -translate-y-1/2 left-0 h-1 bg-primary -z-10 rounded-full transition-all duration-500" 
+                <div
+                  className="absolute top-1/2 -translate-y-1/2 left-0 h-1 bg-primary -z-10 rounded-full transition-all duration-500"
                   style={{ width: `${((step - 1) / 3) * 100}%` }}
                 />
                 {[1, 2, 3, 4].map((i) => (
-                  <div 
-                    key={i} 
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 border-4 bg-white ${
-                      step >= i ? 'border-primary text-primary shadow-lg shadow-primary/20' : 'border-gray-100 text-gray-300'
-                    }`}
+                  <div
+                    key={i}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 border-4 bg-white ${step >= i ? 'border-primary text-primary shadow-lg shadow-primary/20' : 'border-gray-100 text-gray-300'
+                      }`}
                   >
                     {step > i ? <Check className="w-5 h-5" /> : i}
                   </div>
@@ -303,23 +302,23 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
                     <div className="space-y-1">
                       <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Nama Lengkap <span className="text-red-500">*</span></label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         required
                         value={formData.name}
                         onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Nama sesuai KTP" 
-                        className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" 
+                        placeholder="Nama sesuai KTP"
+                        className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Tempat & Tanggal Lahir <span className="text-red-500">*</span></label>
-                      <input 
-                        type="date" 
+                      <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Tanggal Lahir <span className="text-red-500">*</span></label>
+                      <input
+                        type="date"
                         required
                         value={formData.dob}
                         onChange={(e) => setFormData(prev => ({ ...prev, dob: e.target.value }))}
-                        className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" 
+                        className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                       />
                     </div>
                     <div className="space-y-1">
@@ -330,9 +329,8 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                             type="button"
                             key={g}
                             onClick={() => setFormData(prev => ({ ...prev, gender: g as any }))}
-                            className={`flex-1 py-4 rounded-2xl font-bold border-2 transition-all ${
-                              formData.gender === g ? 'border-primary bg-secondary/40 text-primary' : 'border-gray-100 text-gray-400 hover:bg-gray-50'
-                            }`}
+                            className={`flex-1 py-4 rounded-2xl font-bold border-2 transition-all ${formData.gender === g ? 'border-primary bg-secondary/40 text-primary' : 'border-gray-100 text-gray-400 hover:bg-gray-50'
+                              }`}
                           >
                             {g}
                           </button>
@@ -346,13 +344,13 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
                     <div className="space-y-1">
                       <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Alamat Domisili <span className="text-red-500">*</span></label>
-                      <textarea 
+                      <textarea
                         rows={5}
                         required
                         value={formData.address}
                         onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                        placeholder="Alamat lengkap saat ini" 
-                        className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium resize-none" 
+                        placeholder="Alamat lengkap saat ini"
+                        className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium resize-none"
                       />
                     </div>
                     <div className="flex items-center gap-3 p-4 bg-blue-50 text-blue-700 rounded-2xl text-sm">
@@ -373,9 +371,8 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                             type="button"
                             key={cond}
                             onClick={() => toggleCondition(cond)}
-                            className={`px-4 py-3 rounded-xl border-2 text-sm font-bold transition-all text-left flex items-center justify-between ${
-                              formData.conditions.includes(cond) ? 'border-primary bg-secondary/40 text-primary' : 'border-gray-100 text-gray-400'
-                            }`}
+                            className={`px-4 py-3 rounded-xl border-2 text-sm font-bold transition-all text-left flex items-center justify-between ${formData.conditions.includes(cond) ? 'border-primary bg-secondary/40 text-primary' : 'border-gray-100 text-gray-400'
+                              }`}
                           >
                             {cond}
                             {formData.conditions.includes(cond) && <Check className="w-4 h-4" />}
@@ -385,18 +382,17 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                           type="button"
                           onClick={() => {
                             if (formData.conditions.includes('Lainnya')) {
-                              setFormData(prev => ({ 
-                                ...prev, 
+                              setFormData(prev => ({
+                                ...prev,
                                 conditions: prev.conditions.filter(c => c !== 'Lainnya'),
-                                customCondition: '' 
+                                customCondition: ''
                               }));
                             } else {
                               setFormData(prev => ({ ...prev, conditions: [...prev.conditions, 'Lainnya'] }));
                             }
                           }}
-                          className={`px-4 py-3 rounded-xl border-2 text-sm font-bold transition-all text-left flex items-center justify-between ${
-                            formData.conditions.includes('Lainnya') ? 'border-primary bg-secondary/40 text-primary' : 'border-gray-100 text-gray-400'
-                          }`}
+                          className={`px-4 py-3 rounded-xl border-2 text-sm font-bold transition-all text-left flex items-center justify-between ${formData.conditions.includes('Lainnya') ? 'border-primary bg-secondary/40 text-primary' : 'border-gray-100 text-gray-400'
+                            }`}
                         >
                           Lainnya
                           {formData.conditions.includes('Lainnya') && <Check className="w-4 h-4" />}
@@ -411,12 +407,12 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                             exit={{ opacity: 0, height: 0 }}
                             className="pt-2"
                           >
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               value={formData.customCondition}
                               onChange={(e) => setFormData(prev => ({ ...prev, customCondition: e.target.value }))}
-                              placeholder="Ketik riwayat penyakit lainnya..." 
-                              className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-sm" 
+                              placeholder="Ketik riwayat penyakit lainnya..."
+                              className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-sm"
                             />
                           </motion.div>
                         )}
@@ -430,34 +426,34 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                     <div className="space-y-4">
                       <div className="space-y-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Email Baru <span className="text-red-500">*</span></label>
-                        <input 
-                          type="email" 
+                        <input
+                          type="email"
                           required
-                          placeholder="email@anda.com" 
+                          placeholder="email@anda.com"
                           value={formData.email}
                           onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                          className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" 
+                          className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
                       </div>
                       <div className="space-y-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Password <span className="text-red-500">*</span></label>
-                        <input 
-                          type="password" 
+                        <input
+                          type="password"
                           required
                           value={formData.password}
                           onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                          placeholder="Min. 8 karakter" 
-                          className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" 
+                          placeholder="Min. 8 karakter"
+                          className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                         />
                       </div>
                     </div>
                     <label className="flex items-start gap-3 cursor-pointer mt-4">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         required
                         checked={termsAccepted}
                         onChange={(e) => setTermsAccepted(e.target.checked)}
-                        className="mt-1 w-4 h-4 rounded text-primary border-gray-300 focus:ring-primary/20" 
+                        className="mt-1 w-4 h-4 rounded text-primary border-gray-300 focus:ring-primary/20"
                       />
                       <span className="text-sm text-gray-500">Saya menyetujui <button type="button" className="text-primary font-bold">Syarat & Ketentuan</button> serta <button type="button" className="text-primary font-bold">Kebijakan Privasi</button> RS Louis Surabaya.</span>
                     </label>
@@ -467,7 +463,7 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
 
               <div className="flex gap-4">
                 {step > 1 && (
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setStep(prev => prev - 1)}
                     className="p-4 rounded-2xl border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
@@ -475,7 +471,7 @@ export default function AuthPage({ onLogin, onBack }: AuthPageProps) {
                     <ArrowLeft className="w-6 h-6" />
                   </button>
                 )}
-                <button 
+                <button
                   type="submit"
                   disabled={loading || (step === 4 && !termsAccepted)}
                   className="flex-grow btn-primary py-4 text-lg flex items-center justify-center gap-2 disabled:opacity-50"
