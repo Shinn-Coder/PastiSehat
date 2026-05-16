@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+ENV VITE_API_URL="https://pastisehat-backend-793511750817.asia-southeast2.run.app"
 RUN npm run build
 
 # Production Stage

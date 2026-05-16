@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+const API_BASE_URL = (import.meta as any).env.VITE_API_URL;
 
 export async function login(email: string, password: string) {
   const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
@@ -12,7 +12,7 @@ export async function login(email: string, password: string) {
     body: JSON.stringify({ email, password }),
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'Gagal login');
+  if (!response.ok) throw new Error(data.error || 'Gagal logiPn');
   return data.user;
 }
 
