@@ -6,6 +6,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import ReactMarkdown from 'react-markdown';
 import {
   Mic,
   Image as ImageIcon,
@@ -265,23 +266,7 @@ export default function AIChatPage({ user, onNavigate, onShowToast, addAppointme
     }, 1000);
   };
 
-  const renderFormattedText = (text: string) => {
-    return text.split('\n').map((line, idx) => {
-      const parts = line.split(/(\*\*.*?\*\*)/g);
-      const lineContent = parts.map((part, i) => {
-        if (part.startsWith('**') && part.endsWith('**')) {
-          return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
-        }
-        return <span key={i}>{part}</span>;
-      });
-
-      const trimmed = line.trim();
-      if (trimmed.startsWith('- ')) {
-        return <li key={idx} className="ml-4 list-disc my-1">{trimmed.substring(2)}</li>;
-      }
-      return <p key={idx} className={`mb-2 last:mb-0 ${trimmed === '' ? 'h-2' : ''}`}>{lineContent}</p>;
-    });
-  };
+  // Use ReactMarkdown instead of custom formatting
 
   return (
     <div className="max-w-4xl mx-auto h-[80vh] flex flex-col bg-white overflow-hidden md:border border-gray-100 md:rounded-[3rem] md:my-8 shadow-2xl relative">
@@ -329,7 +314,19 @@ export default function AIChatPage({ user, onNavigate, onShowToast, addAppointme
                 </div>
                 <div className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.sender === 'user' ? 'bg-primary text-white rounded-tr-none' : 'bg-white text-gray-800 rounded-tl-none border border-gray-100'
                   }`}>
-                  {msg.sender === 'ai' ? renderFormattedText(msg.text) : msg.text}
+                  {msg.sender === 'ai' ? (
+                    <ReactMarkdown
+                      components={{
+                        p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                        strong: ({node, ...props}) => <strong className="font-bold" {...props} />,
+                        ul: ({node, ...props}) => <ul className="list-disc ml-4 my-1" {...props} />,
+                        ol: ({node, ...props}) => <ol className="list-decimal ml-4 my-1" {...props} />,
+                        li: ({node, ...props}) => <li className="my-0" {...props} />
+                      }}
+                    >
+                      {msg.text}
+                    </ReactMarkdown>
+                  ) : msg.text}
                 </div>
               </div>
             </motion.div>
