@@ -141,7 +141,7 @@ async function executeTool(toolName: string, toolArgs: Record<string, string>, u
           userId,
           doctorName: toolArgs.doctorName || 'Menunggu Konfirmasi',
           date: scheduledDate,
-          summary: toolArgs.summary,
+          summary: toolArgs.summary && toolArgs.summary.trim() !== '' ? toolArgs.summary : 'Konsultasi Umum',
           status: 'Scheduled',
         },
       });
@@ -158,10 +158,10 @@ async function executeTool(toolName: string, toolArgs: Record<string, string>, u
 // POST /api/chat
 app.post('/api/chat', upload.single('file'), async (req: Request, res: Response) => {
   try {
-    const { message, userId, history } = req.body;
+    const { message, userId, history, mediaBase64, mediaMimeType } = req.body;
     const mediaFile = req.file;
 
-    if (!message && !mediaFile) return res.status(400).json({ error: 'Pesan atau file diperlukan' });
+    if (!message && !mediaFile && !mediaBase64) return res.status(400).json({ error: 'Pesan atau file diperlukan' });
 
     const currentUserId = userId || 'demo-user-001';
 
@@ -190,7 +190,11 @@ app.post('/api/chat', upload.single('file'), async (req: Request, res: Response)
       const chat = model.startChat({ history: chatHistory });
 
       const parts: Part[] = [];
-      if (mediaFile) {
+      if (mediaBase64 && mediaMimeType) {
+        // HANYA data base64 murni, hapus prefix
+        const cleanBase64 = mediaBase64.replace(/^data:(.*,)?/, '');
+        parts.push({ inlineData: { mimeType: mediaMimeType, data: cleanBase64 } });
+      } else if (mediaFile) {
         parts.push({ inlineData: { mimeType: mediaFile.mimetype as any, data: mediaFile.buffer.toString('base64') } });
       }
       if (message) parts.push({ text: message });
@@ -222,8 +226,8 @@ app.post('/api/chat', upload.single('file'), async (req: Request, res: Response)
     });
 
     return res.json(responseData);
-  } catch (error) {
-    console.error('[/api/chat] Error:', error);
+  } catch (error: any) {
+    console.error("GEMINI API ERROR:", error.message || error);
     // Jika gagal/API putus, kembalikan teks balasan agar tidak menyebabkan layar blank
     return res.json({ 
       reply: 'Maaf, Cici sedang mengalami gangguan koneksi. Silakan coba beberapa saat lagi.', 
@@ -325,7 +329,7 @@ app.post('/api/appointments', async (req: Request, res: Response) => {
         userId,
         doctorName,
         date: new Date(date),
-        summary: summary || 'Konsultasi Rutin',
+        summary: summary && summary.trim() !== '' ? summary : 'Konsultasi Rutin',
         status: status || 'Scheduled',
       },
     });

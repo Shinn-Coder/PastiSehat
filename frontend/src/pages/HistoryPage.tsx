@@ -74,10 +74,11 @@ function HistoryPageContent({ user, onBack, appointments: realAppointments, chat
             id: app.id,
             doctorId: 'd-auto',
             doctorName: app.doctorName,
-            specialty: app.summary || 'Konsultasi Umum',
+            specialty: 'Konsultasi Umum',
             date: new Date(app.date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
             time: new Date(app.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-            status: app.status === 'Scheduled' ? 'Mendatang' : 'Selesai'
+            status: app.status === 'Scheduled' ? 'Mendatang' : 'Selesai',
+            summary: app.summary
           }));
           setDbAppointments(mapped);
         })
@@ -340,6 +341,40 @@ function HistoryPageContent({ user, onBack, appointments: realAppointments, chat
                   <p className="font-bold text-lg">{selectedAppointment.doctorName}</p>
                   <p className="text-sm text-primary font-bold">{selectedAppointment.specialty}</p>
                 </div>
+
+                {(() => {
+                  let keluhan = 'Tidak ada data', diagnosa = 'Tidak ada data', penanganan = 'Tidak ada data';
+                  if (selectedAppointment.summary) {
+                    try {
+                      const parsed = JSON.parse(selectedAppointment.summary);
+                      keluhan = parsed.keluhan || parsed.summary || keluhan;
+                      diagnosa = parsed.diagnosa || diagnosa;
+                      penanganan = parsed.penanganan || penanganan;
+                    } catch (e) {
+                      keluhan = selectedAppointment.summary;
+                    }
+                  }
+                  return (
+                    <div className="mt-4 p-4 border border-gray-100 rounded-2xl bg-gray-50/50 space-y-3">
+                      <div>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Keluhan/Gejala</p>
+                        <p className="text-sm text-gray-700 whitespace-pre-wrap">{keluhan}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Diagnosa Sementara</p>
+                        <p className="text-sm text-gray-700 whitespace-pre-wrap">{diagnosa}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Penanganan Mandiri</p>
+                        <p className="text-sm text-gray-700 whitespace-pre-wrap">{penanganan}</p>
+                      </div>
+                      <p className="text-xs italic text-gray-400 mt-4 border-t pt-2 border-gray-200">
+                        "Segera ke dokter jika keluhan makin parah atau untuk validasi diagnosa"
+                      </p>
+                    </div>
+                  );
+                })()}
+
                 <div className="p-4 rounded-xl bg-blue-50 text-blue-700 text-sm font-medium">
                   {selectedAppointment.status === 'Mendatang' && "Mohon datang 15 menit sebelum jadwal dan bawa KTP/Kartu Pasien."}
                   {selectedAppointment.status === 'Selesai' && "Sesi telah berakhir. Catatan medis telah dikirim ke profil Anda."}

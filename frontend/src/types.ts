@@ -67,6 +67,7 @@ export interface Appointment {
   date: string;
   time: string;
   status: 'Mendatang' | 'Selesai' | 'Batal';
+  summary?: string;
 }
 
 export interface Medicine {
