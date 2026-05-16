@@ -267,9 +267,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col transition-colors duration-300">
       {/* Header */}
-      <header className={`sticky top-0 z-50 glass shadow-sm px-4 md:px-8 py-3 flex items-center justify-between dark:bg-slate-900/80 dark:border-b dark:border-slate-800 ${currentPage === Page.AUTH ? 'hidden' : ''}`}>
+      <header className={`sticky top-0 z-50 glass shadow-sm px-4 md:px-8 py-3 flex items-center justify-between ${currentPage === Page.AUTH ? 'hidden' : ''}`}>
         <div 
           className="flex items-center gap-2 cursor-pointer group"
           onClick={() => navigateTo(Page.HOME)}

@@ -109,7 +109,10 @@ export default function AIChatPage({ user, onNavigate, onShowToast, addAppointme
 
       addAiMessage(response.reply);
 
-      if (response.reply.includes('apakah Anda ingin membuat jadwal janji temu dengan dokter spesialis terkait?')) {
+      const lowerReply = response.reply.toLowerCase();
+      if (lowerReply.includes('apakah anda ingin membuat jadwal') || 
+          lowerReply.includes('apakah anda ingin saya jadwalkan') || 
+          lowerReply.includes('jadwalkan dengan dokter')) {
         setState('suggesting_appointment');
       }
 
