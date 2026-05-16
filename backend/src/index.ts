@@ -17,21 +17,44 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
 
-const API_KEY = process.env.GEMINI_API_KEY;
+let currentKeyIndex = 0;
+
+const getApiKeys = (): string[] => {
+  const keysStr = process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY || '';
+  const keys = keysStr.split(',').map(k => k.trim()).filter(k => k);
+  if (keys.length === 0) {
+    throw new Error("Gemini API Keys are not configured. Please set GEMINI_API_KEYS.");
+  }
+  return keys;
+};
 
 async function executeWithFallback<T>(operation: (genAI: GoogleGenerativeAI, modelName: string) => Promise<T>): Promise<T> {
-  if (!API_KEY) {
-    throw new Error("Gemini API Key is not configured.");
+  const keys = getApiKeys();
+  let attempts = 0;
+  const maxAttempts = keys.length;
+
+  while (attempts < maxAttempts) {
+    const apiKey = keys[currentKeyIndex];
+    try {
+      const genAI = new GoogleGenerativeAI(apiKey);
+      // As per requirement, strictly use gemini-2.5-flash
+      return await operation(genAI, 'gemini-2.5-flash');
+    } catch (err: any) {
+      const errorMessage = err?.message || String(err);
+      console.error(`[AI Error] Request failed with key index ${currentKeyIndex}:`, errorMessage);
+
+      if (err.status === 429 || errorMessage.includes('429') || errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('rate limit')) {
+        console.log(`[AI Info] Rotating API key due to rate limit/quota. Attempt ${attempts + 1} of ${maxAttempts}`);
+        currentKeyIndex = (currentKeyIndex + 1) % keys.length;
+        attempts++;
+        continue;
+      }
+      
+      throw new Error("Gagal memproses permintaan AI. Pastikan API Key valid dan memiliki kuota.");
+    }
   }
 
-  try {
-    const genAI = new GoogleGenerativeAI(API_KEY);
-    // As per requirement, strictly use gemini-2.5-flash
-    return await operation(genAI, 'gemini-2.5-flash');
-  } catch (err: any) {
-    console.error(`[AI Error] Request failed:`, err?.message || String(err));
-    throw new Error("Gagal memproses permintaan AI. Pastikan API Key valid dan memiliki kuota.");
-  }
+  throw new Error("Gagal memproses permintaan AI. Semua API Key telah mencapai batas kuota atau rate limit.");
 }
 
 const CICI_SYSTEM_PROMPT = `Kamu adalah Cici, asisten kesehatan AI proaktif dan analitis milik PastiSehat di RS Louis Surabaya.
