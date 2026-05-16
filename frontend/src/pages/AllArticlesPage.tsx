@@ -95,8 +95,11 @@ export default function AllArticlesPage({ onArticleClick, onBack }: AllArticlesP
                 >
                   <div className="relative h-56 overflow-hidden">
                     <img 
-                      src={article.image} 
+                      src={article.image || 'https://images.unsplash.com/photo-1576091160550-2173ff9e5c18?auto=format&fit=crop&w=600&h=400'} 
                       alt={article.title} 
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1576091160550-2173ff9e5c18?auto=format&fit=crop&w=600&h=400';
+                      }}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                     />
                     <div className="absolute top-4 left-4">

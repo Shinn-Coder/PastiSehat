@@ -106,7 +106,7 @@ function HistoryPageContent({ user, onBack, appointments: realAppointments, chat
     }
   ];
 
-  const allAppointments = [...realAppointments, ...dbAppointments, ...defaultAppointments];
+  const allAppointments = [...(realAppointments || []), ...(dbAppointments || []), ...defaultAppointments];
 
   const filteredAppointments = allAppointments.filter(a => filter === 'Semua' || a.status === filter);
 
@@ -216,7 +216,7 @@ function HistoryPageContent({ user, onBack, appointments: realAppointments, chat
               })
             ) : (
               <div className="text-center py-20 bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-100">
-                <p className="text-gray-400 font-medium">Belum ada riwayat janji temu atau obrolan.</p>
+                <p className="text-gray-400 font-medium">Belum ada riwayat janji temu medis.</p>
               </div>
             )}
           </div>

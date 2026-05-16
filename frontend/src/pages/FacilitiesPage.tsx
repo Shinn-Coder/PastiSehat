@@ -62,6 +62,12 @@ export default function FacilitiesPage({ onBack }: FacilitiesPageProps) {
       <div className="space-y-4 max-w-2xl">
         <h1 className="text-4xl font-bold">Fasilitas & Layanan Medis</h1>
         <p className="text-gray-500 text-lg">RS Louis Surabaya didukung oleh infrastruktur modern dan teknologi terkini untuk menjamin kenyamanan dan keselamatan Anda.</p>
+        <div className="flex flex-wrap items-center gap-3 pt-2">
+          <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-bold border border-green-200">Melayani Pasien BPJS / Reguler</span>
+          <span className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold border border-blue-100">
+            <NavigationIcon className="w-3 h-3"/> Estimasi Jarak: ± 2.5 km dari lokasi Anda
+          </span>
+        </div>
       </div>
 
       {/* Services Grid */}

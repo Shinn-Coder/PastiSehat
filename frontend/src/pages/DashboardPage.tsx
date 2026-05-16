@@ -99,14 +99,14 @@ export default function DashboardPage({ user, onUpdateUser, onNavigate, onLogout
             </button>
           </div>
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold">Halo, {user.name}!</h1>
-            <p className="text-gray-500 font-medium">{user.email}</p>
+            <h1 className="text-4xl font-bold dark:text-white">Halo, {user.name}!</h1>
+            <p className="text-gray-500 dark:text-slate-400 font-medium">{user.email}</p>
           </div>
         </div>
         <div className="flex gap-4">
           <button 
             onClick={() => onNavigate(Page.SETTINGS)}
-            className="p-3 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all text-gray-600 hover:text-primary"
+            className="p-3 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md transition-all text-gray-600 dark:text-slate-300 hover:text-primary"
           >
             <Settings className="w-6 h-6" />
           </button>
@@ -122,9 +122,9 @@ export default function DashboardPage({ user, onUpdateUser, onNavigate, onLogout
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Basic Info Card */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 md:p-10 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 p-8 md:p-10 shadow-sm space-y-8">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Informasi Dasar</h2>
+              <h2 className="text-xl font-bold dark:text-white">Informasi Dasar</h2>
               <button 
                 onClick={() => setIsEditingProfile(!isEditingProfile)}
                 className="text-primary font-bold text-sm flex items-center gap-2 hover:underline"
@@ -150,23 +150,23 @@ export default function DashboardPage({ user, onUpdateUser, onNavigate, onLogout
                 }}
               >
                 <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Nama</label>
-                  <input name="name" defaultValue={user.name} className="w-full p-4 bg-gray-50 rounded-2xl outline-none border border-transparent focus:border-primary/20" />
+                  <label className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-400">Nama</label>
+                  <input name="name" defaultValue={user.name} className="w-full p-4 bg-gray-50 dark:bg-slate-900 dark:text-white rounded-2xl outline-none border border-transparent dark:border-slate-700 focus:border-primary/20" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Umur</label>
-                  <input name="age" type="number" defaultValue={user.age} className="w-full p-4 bg-gray-50 rounded-2xl outline-none border border-transparent focus:border-primary/20" />
+                  <label className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-400">Umur</label>
+                  <input name="age" type="number" defaultValue={user.age} className="w-full p-4 bg-gray-50 dark:bg-slate-900 dark:text-white rounded-2xl outline-none border border-transparent dark:border-slate-700 focus:border-primary/20" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Kelamin</label>
-                  <select name="gender" defaultValue={user.gender} className="w-full p-4 bg-gray-50 rounded-2xl outline-none border border-transparent focus:border-primary/20">
+                  <label className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-400">Kelamin</label>
+                  <select name="gender" defaultValue={user.gender} className="w-full p-4 bg-gray-50 dark:bg-slate-900 dark:text-white rounded-2xl outline-none border border-transparent dark:border-slate-700 focus:border-primary/20">
                     <option>Laki-laki</option>
                     <option>Perempuan</option>
                   </select>
                 </div>
                 <div className="space-y-1 md:col-span-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Alamat</label>
-                  <textarea name="address" defaultValue={user.address} className="w-full p-4 bg-gray-50 rounded-2xl outline-none border border-transparent focus:border-primary/20 resize-none h-24" />
+                  <label className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-400">Alamat</label>
+                  <textarea name="address" defaultValue={user.address} className="w-full p-4 bg-gray-50 dark:bg-slate-900 dark:text-white rounded-2xl outline-none border border-transparent dark:border-slate-700 focus:border-primary/20 resize-none h-24" />
                 </div>
                 <div className="md:col-span-2">
                   <button type="submit" className="btn-primary w-full py-4">Simpan Perubahan</button>
@@ -179,35 +179,35 @@ export default function DashboardPage({ user, onUpdateUser, onNavigate, onLogout
                     <UserIcon className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Nama & Kelamin</p>
-                    <p className="font-bold">{user.name} ({user.gender})</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider">Nama & Kelamin</p>
+                    <p className="font-bold dark:text-white">{user.name} ({user.gender})</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-secondary rounded-2xl flex items-center justify-center text-primary">
+                  <div className="w-12 h-12 bg-secondary dark:bg-slate-700 rounded-2xl flex items-center justify-center text-primary dark:text-white">
                     <Calendar className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Umur</p>
-                    <p className="font-bold">{user.age} Tahun</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider">Umur</p>
+                    <p className="font-bold dark:text-white">{user.age} Tahun</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-secondary rounded-2xl flex items-center justify-center text-primary">
+                  <div className="w-12 h-12 bg-secondary dark:bg-slate-700 rounded-2xl flex items-center justify-center text-primary dark:text-white">
                     <Mail className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Email</p>
-                    <p className="font-bold">{user.email}</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider">Email</p>
+                    <p className="font-bold dark:text-white">{user.email}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 md:col-span-2">
-                  <div className="w-12 h-12 bg-secondary rounded-2xl flex items-center justify-center text-primary shrink-0">
+                  <div className="w-12 h-12 bg-secondary dark:bg-slate-700 rounded-2xl flex items-center justify-center text-primary dark:text-white shrink-0">
                     <MapPin className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Alamat</p>
-                    <p className="font-bold leading-relaxed">{user.address}</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider">Alamat</p>
+                    <p className="font-bold leading-relaxed dark:text-white">{user.address}</p>
                   </div>
                 </div>
               </div>
@@ -215,9 +215,9 @@ export default function DashboardPage({ user, onUpdateUser, onNavigate, onLogout
           </div>
 
           {/* Family Management */}
-          <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 md:p-10 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 p-8 md:p-10 shadow-sm space-y-8">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Manajemen Keluarga</h2>
+              <h2 className="text-xl font-bold dark:text-white">Manajemen Keluarga</h2>
               <button 
                 onClick={() => setShowAddFamily(true)}
                 className="btn-primary px-4 py-2 text-sm flex items-center gap-2"
@@ -257,22 +257,22 @@ export default function DashboardPage({ user, onUpdateUser, onNavigate, onLogout
           {appointments.length > 0 && (
             <div className="bg-secondary/40 rounded-[2.5rem] p-8 border border-primary/10 space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-primary">Janji Temu Mendatang</h2>
-                <button onClick={() => onNavigate(Page.HISTORY)} className="text-sm font-bold text-primary flex items-center gap-1">Lengkap <ChevronRight className="w-4 h-4" /></button>
+                <h2 className="text-xl font-bold text-primary dark:text-blue-400">Janji Temu Mendatang</h2>
+                <button onClick={() => onNavigate(Page.HISTORY)} className="text-sm font-bold text-primary dark:text-blue-400 flex items-center gap-1">Lengkap <ChevronRight className="w-4 h-4" /></button>
               </div>
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-primary/5 flex items-center justify-between">
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-primary/5 dark:border-slate-700 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center font-bold">
                     {appointments[0].date.split(',')[1].trim().split(' ')[0]}
                   </div>
                   <div>
-                    <p className="font-bold">{appointments[0].doctorName}</p>
-                    <p className="text-xs text-gray-500">{appointments[0].specialty}</p>
+                    <p className="font-bold dark:text-white">{appointments[0].doctorName}</p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400">{appointments[0].specialty}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-primary">{appointments[0].time} WIB</p>
-                  <p className="text-[10px] text-gray-400 font-bold uppercase">{appointments[0].date.split(',')[0]}</p>
+                  <p className="text-sm font-bold text-primary dark:text-blue-400">{appointments[0].time} WIB</p>
+                  <p className="text-[10px] text-gray-400 dark:text-slate-500 font-bold uppercase">{appointments[0].date.split(',')[0]}</p>
                 </div>
               </div>
             </div>
@@ -341,25 +341,25 @@ export default function DashboardPage({ user, onUpdateUser, onNavigate, onLogout
           </div>
 
           {/* Quick Actions / Settings */}
-          <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 shadow-sm space-y-4">
-            <h2 className="text-xl font-bold mb-6">Keamanan</h2>
-            <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-colors group">
+          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 p-8 shadow-sm space-y-4">
+            <h2 className="text-xl font-bold mb-6 dark:text-white">Keamanan</h2>
+            <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors group">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-500 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                <div className="w-10 h-10 bg-gray-50 dark:bg-slate-900 rounded-xl flex items-center justify-center text-gray-500 dark:text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                   <Shield className="w-5 h-5" />
                 </div>
-                <span className="font-bold text-gray-700">Ganti Password</span>
+                <span className="font-bold text-gray-700 dark:text-slate-200">Ganti Password</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-gray-300" />
+              <ChevronRight className="w-4 h-4 text-gray-300 dark:text-slate-600" />
             </button>
-            <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-colors group">
+            <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors group">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-500 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                <div className="w-10 h-10 bg-gray-50 dark:bg-slate-900 rounded-xl flex items-center justify-center text-gray-500 dark:text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                   <Lock className="w-5 h-5" />
                 </div>
-                <span className="font-bold text-gray-700">Dua Langkah Verifikasi</span>
+                <span className="font-bold text-gray-700 dark:text-slate-200">Dua Langkah Verifikasi</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-gray-300" />
+              <ChevronRight className="w-4 h-4 text-gray-300 dark:text-slate-600" />
             </button>
           </div>
 

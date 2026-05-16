@@ -69,3 +69,14 @@ export async function summarizeChat(history: any[]) {
   if (!response.ok) throw new Error(data.error || 'Gagal membuat ringkasan chat');
   return data.summary;
 }
+
+export async function createAppointment(userId: string, doctorName: string, date: string, summary?: string) {
+  const response = await fetch(`${API_BASE_URL}/api/appointments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, doctorName, date, summary }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Gagal membuat janji temu');
+  return data.appointment;
+}

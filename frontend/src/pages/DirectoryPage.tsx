@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { DOCTORS } from '../constants';
 import { Page, Doctor } from '../types';
+import { createAppointment } from '../api';
 
 interface DirectoryPageProps {
   onNavigate: (page: Page) => void;
@@ -34,6 +35,7 @@ export default function DirectoryPage({ onNavigate, onShowToast, onBack, addAppo
   const [selectedSpec, setSelectedSpec] = useState<string>('Semua');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [isBooking, setIsBooking] = useState(false);
 
   const specialties = ['Semua', 'Dokter Umum', 'Spesialis Penyakit Dalam', 'Spesialis Anak', 'Spesialis Bedah Tulang', 'Spesialis Jantung', 'Spesialis Mata'];
 
@@ -42,19 +44,35 @@ export default function DirectoryPage({ onNavigate, onShowToast, onBack, addAppo
     (doc.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const handleBookAppointment = (slot: string) => {
+  const handleBookAppointment = async (slot: string) => {
     if (!selectedDoctor) return;
-    const date = "Besok, 16 Mei 2026";
+    setIsBooking(true);
     
-    addAppointment(
-      { id: selectedDoctor.id, name: selectedDoctor.name, specialty: selectedDoctor.specialty },
-      date,
-      slot
-    );
+    try {
+      const userStr = localStorage.getItem('user');
+      const userId = userStr ? JSON.parse(userStr).id : 'demo-user-001';
+      
+      const isoDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      const [hours, minutes] = slot.split(':');
+      isoDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
-    setSelectedDoctor(null);
-    onShowToast("Janji temu disinkronkan ke sistem!", "success");
-    onNavigate(Page.HISTORY);
+      await createAppointment(userId, selectedDoctor.name, isoDate.toISOString(), "Konsultasi dari Direktori");
+
+      const date = "Besok, 16 Mei 2026";
+      addAppointment(
+        { id: selectedDoctor.id, name: selectedDoctor.name, specialty: selectedDoctor.specialty },
+        date,
+        slot
+      );
+
+      setSelectedDoctor(null);
+      onShowToast("Janji temu disinkronkan ke sistem!", "success");
+      onNavigate(Page.HISTORY);
+    } catch (err: any) {
+      onShowToast(err.message || "Gagal membuat janji temu", "error" as any);
+    } finally {
+      setIsBooking(false);
+    }
   };
 
   return (
@@ -115,7 +133,14 @@ export default function DirectoryPage({ onNavigate, onShowToast, onBack, addAppo
             className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden card-hover group"
           >
             <div className="aspect-[4/3] overflow-hidden relative">
-              <img src={doc.image} alt={doc.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img 
+                src={doc.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(doc.name)}&background=0D8BFF&color=fff`} 
+                alt={doc.name} 
+                onError={(e) => {
+                  e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(doc.name)}&background=0D8BFF&color=fff`;
+                }}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+              />
               <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-xl text-primary font-bold flex items-center gap-1 text-xs">
                 <Star className="w-3 h-3 fill-primary" /> 4.9
               </div>
@@ -134,6 +159,13 @@ export default function DirectoryPage({ onNavigate, onShowToast, onBack, addAppo
                     <span>{q}</span>
                   </div>
                 ))}
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <span className="px-2 py-1 bg-green-50 text-green-700 rounded-lg text-[10px] font-bold border border-green-100">BPJS / Reguler</span>
+                <span className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-lg text-[10px] font-bold border border-blue-100">
+                  <MapPin className="w-3 h-3"/> ± 2.5 km
+                </span>
               </div>
 
               <div className="pt-6 border-t border-gray-50 flex items-center justify-between">
@@ -185,7 +217,14 @@ export default function DirectoryPage({ onNavigate, onShowToast, onBack, addAppo
               </button>
 
               <div className="md:w-2/5 relative h-64 md:h-auto">
-                <img src={selectedDoctor.image} className="w-full h-full object-cover" alt={selectedDoctor.name} />
+                <img 
+                  src={selectedDoctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedDoctor.name)}&background=0D8BFF&color=fff`} 
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedDoctor.name)}&background=0D8BFF&color=fff`;
+                  }}
+                  className="w-full h-full object-cover" 
+                  alt={selectedDoctor.name} 
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
 
@@ -193,6 +232,13 @@ export default function DirectoryPage({ onNavigate, onShowToast, onBack, addAppo
                 <div className="space-y-2">
                   <p className="text-primary font-bold text-xs uppercase tracking-widest">{selectedDoctor.specialty}</p>
                   <h2 className="text-3xl font-bold">{selectedDoctor.name}</h2>
+                  
+                  <div className="flex flex-wrap items-center gap-2 pt-2">
+                    <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-bold border border-green-200">Tersedia untuk Pasien BPJS / Reguler</span>
+                    <span className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold border border-blue-100">
+                      <MapPin className="w-3 h-3"/> ± 2.5 km dari lokasi Anda
+                    </span>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6">
@@ -227,7 +273,8 @@ export default function DirectoryPage({ onNavigate, onShowToast, onBack, addAppo
                       <button 
                         key={slot}
                         onClick={() => handleBookAppointment(slot)}
-                        className="p-3 border border-gray-100 rounded-2xl text-xs font-bold hover:bg-primary hover:text-white hover:border-primary transition-all text-center"
+                        disabled={isBooking}
+                        className="p-3 border border-gray-100 rounded-2xl text-xs font-bold hover:bg-primary hover:text-white hover:border-primary transition-all text-center disabled:opacity-50"
                       >
                         {slot} WIB
                       </button>
@@ -238,9 +285,10 @@ export default function DirectoryPage({ onNavigate, onShowToast, onBack, addAppo
                 <div className="pt-4">
                   <button 
                     onClick={() => handleBookAppointment('09:00')}
-                    className="w-full btn-primary py-4 text-center rounded-2xl font-bold"
+                    disabled={isBooking}
+                    className="w-full btn-primary py-4 text-center rounded-2xl font-bold disabled:opacity-50 flex items-center justify-center gap-2"
                   >
-                    Pilih Jadwal & Buat Janji
+                    {isBooking ? 'Memproses...' : 'Pilih Jadwal & Buat Janji'}
                   </button>
                 </div>
               </div>

@@ -49,7 +49,7 @@ async function executeWithFallback<T>(operation: (genAI: GoogleGenerativeAI, mod
         attempts++;
         continue;
       }
-      
+
       throw new Error("Gagal memproses permintaan AI. Pastikan API Key valid dan memiliki kuota.");
     }
   }
@@ -82,6 +82,7 @@ Jika data sudah cukup, kamu WAJIB secara eksplisit menanyakan kalimat persis sep
 - Jika User Menjawab "TIDAK" (atau menolak): Berikan rekomendasi penanganan pertama darurat/mandiri (saran pola tidur, rekomendasi makanan/buah/sayuran, dan saran vitamin) yang disesuaikan dengan kondisi user. Tutup pesan dengan DISCLAIMER MEDIS (bahwa ini bukan saran dokter pengganti).
 
 PENTING TAMBAHAN & ATURAN FORMATTING (WAJIB DITAATI):
+- Jika pasien meminta rekomendasi dokter, sebutkan spesialisasi dan berikan NAMA dokter fiktif. KAMU WAJIB BERTANYA: Apakah Anda ingin saya jadwalkan dengan Dokter [Nama]? JANGAN memanggil tool booking sebelum pasien menjawab YA/SETUJU.
 - DILARANG MERESPONS DENGAN WALL OF TEXT.
 - Gunakan garis baru (Enter) untuk memisahkan setiap paragraf.
 - Gunakan Bullet Points (-) untuk mendaftar pertanyaan, gejala, atau rekomendasi.
@@ -138,7 +139,7 @@ async function executeTool(toolName: string, toolArgs: Record<string, string>, u
       const appointment = await prisma.appointment.create({
         data: {
           userId,
-          doctorName: toolArgs.doctorName,
+          doctorName: toolArgs.doctorName || 'Menunggu Konfirmasi',
           date: scheduledDate,
           summary: toolArgs.summary,
           status: 'Scheduled',
@@ -223,7 +224,13 @@ app.post('/api/chat', upload.single('file'), async (req: Request, res: Response)
     return res.json(responseData);
   } catch (error) {
     console.error('[/api/chat] Error:', error);
-    return res.status(500).json({ error: 'Terjadi kesalahan internal.', detail: error instanceof Error ? error.message : String(error) });
+    // Jika gagal/API putus, kembalikan teks balasan agar tidak menyebabkan layar blank
+    return res.json({ 
+      reply: 'Maaf, Cici sedang mengalami gangguan koneksi. Silakan coba beberapa saat lagi.', 
+      appointmentCreated: false, 
+      appointmentData: null, 
+      userId: req.body.userId || 'demo-user-001'
+    });
   }
 });
 
@@ -231,7 +238,7 @@ app.post('/api/chat', upload.single('file'), async (req: Request, res: Response)
 app.post('/api/chat/voice', upload.single('audio'), async (req: Request, res: Response) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'File audio diperlukan' });
-    
+
     const resultText = await executeWithFallback(async (genAI, modelName) => {
       const model = genAI.getGenerativeModel({ model: modelName });
       const result = await model.generateContent([
@@ -255,7 +262,7 @@ app.post('/api/chat/summarize', async (req: Request, res: Response) => {
     if (!history || !Array.isArray(history)) return res.status(400).json({ error: 'History diperlukan' });
 
     const chatText = history.map(h => `${h.sender === 'user' ? 'Pasien' : 'Cici'}: ${h.text}`).join('\n');
-    
+
     const summary = await executeWithFallback(async (genAI, modelName) => {
       const model = genAI.getGenerativeModel({ model: modelName });
       const result = await model.generateContent(`
@@ -306,6 +313,29 @@ app.get('/api/appointments/:userId', async (req: Request, res: Response) => {
   }
 });
 
+// POST /api/appointments
+app.post('/api/appointments', async (req: Request, res: Response) => {
+  try {
+    const { userId, doctorName, date, summary, status } = req.body;
+    if (!userId || !doctorName || !date) {
+      return res.status(400).json({ error: 'Data tidak lengkap' });
+    }
+    const appointment = await prisma.appointment.create({
+      data: {
+        userId,
+        doctorName,
+        date: new Date(date),
+        summary: summary || 'Konsultasi Rutin',
+        status: status || 'Scheduled',
+      },
+    });
+    return res.status(201).json({ success: true, appointment });
+  } catch (error) {
+    console.error('[/api/appointments] Error:', error);
+    return res.status(500).json({ error: 'Gagal membuat janji temu' });
+  }
+});
+
 app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', service: 'pastisehat-backend', version: '2.0.0' });
 });
@@ -353,12 +383,12 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return res.status(401).json({ error: 'Email atau password salah' });
+      return res.status(404).json({ error: 'User tidak ditemukan, silahkan daftar terlebih dahulu!' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Email atau password salah' });
+      return res.status(401).json({ error: 'Password salah' });
     }
 
     const { password: _, ...userWithoutPassword } = user;
