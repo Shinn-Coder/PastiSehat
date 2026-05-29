@@ -1,0 +1,9 @@
+{
+  "name": "PastiSehat",
+  "description": "Layanan kesehatan modern RS Louis Surabaya dengan asisten AI Cici, pendaftaran online, dan apotek digital.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
